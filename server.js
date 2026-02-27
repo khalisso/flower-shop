@@ -29,14 +29,6 @@ function writeFlowers(flowers) {
 
 // --- API ---
 
-app.get('/api/debug', async (req, res) => {
-  try {
-    await bot.sendMessage(CHAT_ID, '🔧 Тест соединения');
-    res.json({ ok: true, CHAT_ID, hasToken: !!BOT_TOKEN });
-  } catch (e) {
-    res.json({ ok: false, error: e.message, CHAT_ID, hasToken: !!BOT_TOKEN });
-  }
-});
 
 app.get('/api/flowers', (req, res) => {
   res.json(readFlowers());
