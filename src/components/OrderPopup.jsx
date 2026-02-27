@@ -1,88 +1,156 @@
 import { useState } from 'react';
 
 const API_URL = process.env.REACT_APP_API_URL ?? '';
+const ADMIN_TELEGRAM = 'https://t.me/halliilll';
 
-export default function OrderPopup({ flower, quantity, totalPrice, onClose }) {
+const tg = window.Telegram?.WebApp;
+const tgUser = tg?.initDataUnsafe?.user;
+const isTMA = !!tgUser;
+
+// ── TMA MODE ──────────────────────────────────────────────
+
+function TMAOrderPopup({ flower, quantity, totalPrice, onClose }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const userName = [tgUser?.first_name, tgUser?.last_name].filter(Boolean).join(' ');
+
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    try {
+      await fetch(`${API_URL}/api/order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flower, quantity, totalPrice, tgUser })
+      });
+      setIsSubmitted(true);
+    } catch (e) {
+      console.error(e);
+      setIsSubmitted(true); // всё равно перекидываем
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOpenChat = () => {
+    tg.openTelegramLink(ADMIN_TELEGRAM);
+    onClose();
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="popup-overlay" onClick={onClose}>
+        <div className="popup-content" onClick={e => e.stopPropagation()}>
+          <div className="popup-success">
+            <div className="success-icon">✓</div>
+            <h3>Заявка отправлена!</h3>
+            <p>Продавец получил ваш заказ и скоро напишет</p>
+            <button className="popup-button" onClick={handleOpenChat}>
+              Написать продавцу
+            </button>
+            <button className="popup-cancel" onClick={onClose} style={{ marginTop: 8 }}>
+              Закрыть
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="popup-overlay" onClick={onClose}>
+      <div className="popup-content" onClick={e => e.stopPropagation()}>
+        <button className="popup-close" onClick={onClose}>×</button>
+
+        <div className="popup-header">
+          <h3>Подтверждение заказа</h3>
+          <div className="order-summary-mini">
+            <span>{flower.name}</span>
+            <span>{quantity} шт • {totalPrice.toLocaleString('ru-RU')} ₽</span>
+          </div>
+        </div>
+
+        <div className="popup-body">
+          <div className="tma-user-info">
+            <span className="tma-user-label">Заказ от</span>
+            <span className="tma-user-name">{userName}</span>
+            {tgUser?.username && (
+              <span className="tma-user-handle">@{tgUser.username}</span>
+            )}
+          </div>
+          <p className="popup-description">
+            Продавец получит заявку и напишет вам в Telegram
+          </p>
+        </div>
+
+        <div className="popup-footer">
+          <button
+            className="order-btn"
+            onClick={handleConfirm}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Отправляем...' : 'Подтвердить заказ'}
+          </button>
+          <button className="popup-cancel" onClick={onClose}>
+            Отмена
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── WEB MODE ──────────────────────────────────────────────
+
+function WebOrderPopup({ flower, quantity, totalPrice, onClose }) {
   const [phone, setPhone] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const TELEGRAM_LINK = 'https://t.me/halliilll'; // твой Telegram для связи
-
-  // Форматирование телефона
   const formatPhone = (input) => {
     let digits = input.replace(/\D/g, '');
     if (digits.length > 0) {
-      if (digits[0] === '8') {
-        digits = '7' + digits.slice(1);
-      } else if (digits[0] !== '7' && digits.length > 0) {
-        digits = '7' + digits;
-      }
+      if (digits[0] === '8') digits = '7' + digits.slice(1);
+      else if (digits[0] !== '7') digits = '7' + digits;
     }
-
     if (digits.length === 0) return '';
-
     let formatted = '+' + digits[0];
     if (digits.length > 1) formatted += ' (' + digits.slice(1, 4);
     if (digits.length >= 5) formatted += ') ' + digits.slice(4, 7);
     if (digits.length >= 8) formatted += '-' + digits.slice(7, 9);
     if (digits.length >= 10) formatted += '-' + digits.slice(9, 11);
-
     return formatted;
   };
 
-  const handlePhoneChange = (e) => {
-    const formatted = formatPhone(e.target.value);
-    setPhone(formatted);
-    setError('');
-  };
-
-  const validatePhone = (phone) => {
-    const digits = phone.replace(/\D/g, '');
+  const validatePhone = (p) => {
+    const digits = p.replace(/\D/g, '');
     return digits.length === 11 && digits[0] === '7';
   };
 
-  // ✅ ОТПРАВКА ЗАКАЗА НА СЕРВЕР
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     if (!validatePhone(phone)) {
       setError('Пожалуйста, введите корректный номер телефона');
       return;
     }
-
     setIsLoading(true);
-
     try {
       const response = await fetch(`${API_URL}/api/order`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          flower,
-          quantity,
-          totalPrice,
-          phone
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flower, quantity, totalPrice, phone })
       });
-
       const data = await response.json();
-
-      if (data.success) {
-        setIsSubmitted(true);
-      } else {
-        setError('Ошибка при отправке. Попробуйте позже');
-      }
-    } catch (error) {
-      console.error('Ошибка:', error);
+      if (data.success) setIsSubmitted(true);
+      else setError('Ошибка при отправке. Попробуйте позже');
+    } catch {
       setError('Ошибка соединения с сервером');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Экран успеха
   if (isSubmitted) {
     return (
       <div className="popup-overlay" onClick={onClose}>
@@ -93,9 +161,7 @@ export default function OrderPopup({ flower, quantity, totalPrice, onClose }) {
             <h3>Заявка принята!</h3>
             <p>Мы получили ваш заказ и скоро свяжемся с вами</p>
             <p className="success-phone">{phone}</p>
-            <button className="popup-button" onClick={onClose}>
-              Хорошо
-            </button>
+            <button className="popup-button" onClick={onClose}>Хорошо</button>
           </div>
         </div>
       </div>
@@ -116,16 +182,13 @@ export default function OrderPopup({ flower, quantity, totalPrice, onClose }) {
         </div>
 
         <div className="popup-body">
-          <p className="popup-description">
-            Выберите удобный способ связи:
-          </p>
+          <p className="popup-description">Выберите удобный способ связи:</p>
 
-          {/* Вариант 1: Telegram */}
           <button
             className="telegram-option"
             onClick={() => {
               const message = `Здравствуйте! Хочу заказать:\n${flower.name} - ${quantity} шт\nСумма: ${totalPrice.toLocaleString('ru-RU')} ₽`;
-              window.open(`${TELEGRAM_LINK}?text=${encodeURIComponent(message)}`, '_blank');
+              window.open(`${ADMIN_TELEGRAM}?text=${encodeURIComponent(message)}`, '_blank');
               onClose();
             }}
           >
@@ -141,25 +204,15 @@ export default function OrderPopup({ flower, quantity, totalPrice, onClose }) {
             <div className="option-arrow">→</div>
           </button>
 
-          {/* Вариант 2: Телефон */}
           <div className="phone-option">
-            <div className="option-divider">
-              <span>или</span>
-            </div>
-
-            <div className="option-icon phone-icon">
-              <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-              </svg>
-            </div>
-
+            <div className="option-divider"><span>или</span></div>
             <form onSubmit={handlePhoneSubmit} className="phone-form">
               <p className="option-label">Перезвонить мне</p>
               <div className="phone-input-group">
                 <input
                   type="tel"
                   value={phone}
-                  onChange={handlePhoneChange}
+                  onChange={e => { setPhone(formatPhone(e.target.value)); setError(''); }}
                   placeholder="+7 (___) ___-__-__"
                   className={`phone-input ${error ? 'error' : ''}`}
                 />
@@ -168,19 +221,21 @@ export default function OrderPopup({ flower, quantity, totalPrice, onClose }) {
                 </button>
               </div>
               {error && <div className="phone-error">{error}</div>}
-              <p className="phone-hint">
-                Начните вводить номер — +7 появится автоматически
-              </p>
+              <p className="phone-hint">Начните вводить номер — +7 появится автоматически</p>
             </form>
           </div>
         </div>
 
         <div className="popup-footer">
-          <button className="popup-cancel" onClick={onClose}>
-            Отмена
-          </button>
+          <button className="popup-cancel" onClick={onClose}>Отмена</button>
         </div>
       </div>
     </div>
   );
+}
+
+// ── EXPORT ────────────────────────────────────────────────
+
+export default function OrderPopup(props) {
+  return isTMA ? <TMAOrderPopup {...props} /> : <WebOrderPopup {...props} />;
 }

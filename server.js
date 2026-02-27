@@ -34,9 +34,9 @@ app.get('/api/flowers', (req, res) => {
 });
 
 app.post('/api/order', async (req, res) => {
-  const { flower, quantity, totalPrice, phone } = req.body;
+  const { flower, quantity, totalPrice, phone, tgUser } = req.body;
 
-  if (!flower || !quantity || !totalPrice || !phone) {
+  if (!flower || !quantity || !totalPrice) {
     return res.status(400).json({ error: 'Не все данные заполнены' });
   }
 
@@ -46,20 +46,30 @@ app.post('/api/order', async (req, res) => {
     hour: '2-digit', minute: '2-digit'
   });
 
+  let contactLine;
+  if (tgUser) {
+    const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ');
+    const username = tgUser.username ? `@${tgUser.username}` : '';
+    const profileLink = `tg://user?id=${tgUser.id}`;
+    contactLine = `👤 *Покупатель:* [${name}](${profileLink})${username ? ' ' + username : ''}`;
+  } else {
+    contactLine = `📞 *Телефон:* ${phone}`;
+  }
+
   const message = `
 🌸 *НОВЫЙ ЗАКАЗ* 🌸
 ━━━━━━━━━━━━━━━━━━━━━
 🌷 *Цветок:* ${flower.name}
 📦 *Количество:* ${quantity} шт
 💰 *Сумма:* ${totalPrice.toLocaleString('ru-RU')} ₽
-📞 *Телефон:* ${phone}
+${contactLine}
 ━━━━━━━━━━━━━━━━━━━━━
 ⏱ *Время:* ${dateStr}
   `;
 
   try {
     await bot.sendMessage(CHAT_ID, message, { parse_mode: 'Markdown' });
-    console.log(`✅ Заказ: ${flower.name} - ${quantity}шт, тел: ${phone}`);
+    console.log(`✅ Заказ: ${flower.name} - ${quantity}шт`);
     res.json({ success: true });
   } catch (error) {
     console.error('❌ Ошибка Telegram:', error);
