@@ -1,13 +1,778 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --tg-bg: #f4f8f0;
+  --tg-bg-secondary: #e8f0e0;
+  --tg-text: #15280d;
+  --tg-text-secondary: #4a6a40;
+  --tg-accent: #54a7ee;
+  --tg-border: #d0e0c8;
+  --tg-success: #66b744;
+  --tg-danger: #e57373;
+  --tg-warning: #f2c94c;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--tg-bg);
+  color: var(--tg-text);
+  line-height: 1.6;
+}
+
+.app-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: var(--tg-bg);
+  border-left: 1px solid var(--tg-border);
+  border-right: 1px solid var(--tg-border);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Header */
+.header {
+  background-color: var(--tg-bg);
+  border-bottom: 1px solid var(--tg-border);
+  z-index: 100;
+  padding: 12px 16px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@media (max-width: 480px) {
+  .header {
+    border-radius: 8px 8px 0 0;
+  }
+  .search-container:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .telegram-text {
+      display: none;
+  }
+  .telegram-link {
+      padding: 8px;
+      border-radius: 50%;
+  }
+  .telegram-icon {
+      width: 22px;
+      height: 22px;
+  }
+  .popup-content {
+      width: 95%;
+      border-radius: 20px;
+  }
+
+  .telegram-option {
+      padding: 14px;
+  }
+
+  .phone-input-group {
+      flex-direction: column;
+  }
+
+  .phone-submit {
+      width: 100%;
+  }
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Search */
+.search-container {
+  background-color: var(--tg-bg-secondary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  font-size: 16px;
+  outline: none;
+}
+
+/* List */
+.list {
+  padding: 0 16px;
+}
+
+.list-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--tg-border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.2s;
+}
+
+.list-item:hover {
+  background-color: var(--tg-bg-secondary);
+}
+
+.list-item-image {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.list-item-content {
+  flex: 1;
+}
+
+.list-item-title {
+  font-weight: 500;
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+.list-item-subtitle {
+  font-size: 14px;
+  color: var(--tg-text-secondary);
+}
+
+.list-item-price {
+  font-weight: 600;
+  color: var(--tg-accent);
+  font-size: 16px;
+}
+
+/* Detail Page */
+.detail-header {
+  position: sticky;
+  top: 0;
+  background-color: var(--tg-bg);
+  border-bottom: 1px solid var(--tg-border);
+  z-index: 100;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-header h2 {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--tg-accent);
+}
+
+.detail-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.detail-content {
+  padding: 12px;
+}
+
+.detail-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.detail-latin {
+  font-size: 12px;
+  color: var(--tg-text-secondary);
+  margin-bottom: 10px;
+}
+
+.detail-description {
+  font-size: 13px;
+  color: var(--tg-text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.detail-info {
+  background: var(--tg-bg-secondary);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--tg-text-secondary);
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tg-text);
+}
+
+/* НОВЫЕ КОМПАКТНЫЕ СТИЛИ (добавлено) */
+
+/* Quantity block */
+.quantity-block {
+  margin-bottom: 10px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--tg-border);
+  background: white;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--tg-accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qty-input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid var(--tg-border);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  background: white;
+}
+
+/* Стили для невалидного поля */
+.qty-input.invalid {
+  border-color: var(--tg-danger);
+  background-color: rgba(229, 115, 115, 0.05);
+  color: var(--tg-danger);
+}
+
+/* Сообщение об ошибке */
+.error-message {
+  color: var(--tg-danger);
+  font-size: 11px;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Отключенная кнопка заказа */
+.order-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #ccc;
+}
+
+.order-btn.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Pack options */
+.pack-options {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.pack-btn {
+  flex: 1;
+  padding: 8px 0;
+  background: white;
+  border: 1px solid var(--tg-border);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tg-text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pack-btn.active {
+  background: var(--tg-accent);
+  color: white;
+  border-color: var(--tg-accent);
+}
+
+/* Price block */
+.price-block {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--tg-border);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.price-row.total {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--tg-border);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.price-highlight {
+  color: var(--tg-accent);
+  font-weight: 600;
+}
+
+.total-highlight {
+  color: var(--tg-success);
+  font-size: 18px;
+}
+
+/* Mini hint */
+.hint-mini {
+  background: #e8f5e9;
+  border-radius: 20px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #2e7d32;
+}
+
+.hint-mini-btn {
+  margin-left: auto;
+  background: var(--tg-success);
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Order button */
+.order-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--tg-accent);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(84, 167, 238, 0.3);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--tg-text-secondary);
+}
+
+/* Badge */
+.badge {
+  background-color: var(--tg-success);
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Telegram link */
+.telegram-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tg-accent);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 30px;
+  background: var(--tg-bg-secondary);
+  transition: all 0.2s;
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.telegram-link:hover {
+  background: var(--tg-accent);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(84, 167, 238, 0.3);
+}
+
+.telegram-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.telegram-text {
+  display: inline;
+}
+
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.popup-content {
+  background: white;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.popup-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--tg-bg-secondary);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--tg-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.popup-close:hover {
+  background: var(--tg-border);
+}
+
+.popup-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--tg-border);
+}
+
+.popup-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.order-summary-mini {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--tg-text-secondary);
+}
+
+.popup-body {
+  padding: 24px;
+}
+
+.popup-description {
+  font-size: 15px;
+  color: var(--tg-text-secondary);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Telegram option */
+.telegram-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #54a7ee 0%, #4299e0 100%);
+  border: none;
+  border-radius: 16px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.telegram-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(84, 167, 238, 0.4);
+}
+
+.telegram-icon-large {
+  background: rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-text {
+  flex: 1;
+}
+
+.option-text strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.option-text span {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.option-arrow {
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+/* Phone option */
+.phone-option {
+  margin-top: 8px;
+}
+
+.option-divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.option-divider::before,
+.option-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 30px);
+  height: 1px;
+  background: var(--tg-border);
+}
+
+.option-divider::before {
+  left: 0;
+}
+
+.option-divider::after {
+  right: 0;
+}
+
+.option-divider span {
+  background: white;
+  padding: 0 10px;
+  color: var(--tg-text-secondary);
+  font-size: 13px;
+}
+
+.phone-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: var(--tg-accent);
+}
+
+.option-label {
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.phone-form {
+  width: 100%;
+}
+
+.phone-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--tg-border);
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.phone-input:focus {
+  border-color: var(--tg-accent);
+}
+
+.phone-input.error {
+  border-color: var(--tg-danger);
+}
+
+.phone-submit {
+  padding: 12px 20px;
+  background: var(--tg-success);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.phone-error {
+  color: var(--tg-danger);
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.phone-hint {
+  font-size: 11px;
+  color: var(--tg-text-secondary);
+  margin-top: 8px;
+}
+
+/* Popup footer */
+.popup-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--tg-border);
+}
+
+.popup-cancel {
+  width: 100%;
+  padding: 14px;
+  background: var(--tg-bg-secondary);
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--tg-text-secondary);
+  cursor: pointer;
+}
+
+/* Success state */
+.popup-success {
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.success-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--tg-success);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+}
+
+.popup-success h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.popup-success p {
+  color: var(--tg-text-secondary);
+  margin-bottom: 8px;
+}
+
+.success-phone {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--tg-text);
+  margin: 16px 0 24px;
+}
+
+.popup-button {
+  background: var(--tg-accent);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Удаляем старые громоздкие стили (они больше не используются) */
+/* .quantity-selector, .price-summary, .hint-message, .info-message, .order-button удалены */

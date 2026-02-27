@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "name": "Роза красная",
+    "latin": "Rosa Red",
+    "supplierPrice": 350,
+    "packSize": 25,
+    "markup": 0.3,
+    "image": "https://images.unsplash.com/photo-1543747579-795b9c2c38a9?w=400",
+    "description": "Классические красные розы с насыщенным цветом и бархатистыми лепестками."
+  },
+  {
+    "id": 2,
+    "name": "Пион",
+    "latin": "Paeonia",
+    "supplierPrice": 420,
+    "packSize": 25,
+    "markup": 0.3,
+    "image": "https://images.unsplash.com/photo-1560365163-534f02f57e53?w=400",
+    "description": "Пышные пионы с нежным ароматом и мягкими лепестками."
+  },
+  {
+    "id": 3,
+    "name": "Хризантема",
+    "latin": "Chrysanthemum",
+    "supplierPrice": 280,
+    "packSize": 20,
+    "markup": 0.3,
+    "image": "https://images.unsplash.com/photo-1516094893271-42192c6c976e?w=400",
+    "description": "Яркие хризантемы, которые долго стоят в букете."
+  },
+  {
+    "id": 4,
+    "name": "Тюльпан",
+    "latin": "Tulipa",
+    "supplierPrice": 58,
+    "packSize": 50,
+    "markup": 0.3,
+    "image": "/images/Tulpan/Tulpan.jpg",
+    "description": "Элегантные тюльпаны в пастельных тонах."
+  },
+  {
+    "id": 5,
+    "name": "Гербера",
+    "latin": "Gerbera",
+    "supplierPrice": 290,
+    "packSize": 20,
+    "markup": 0.3,
+    "image": "https://images.unsplash.com/photo-1513130869420-2224a16f4b33?w=400",
+    "description": "Яркие герберы, которые поднимают настроение."
+  },
+  {
+    "id": 6,
+    "name": "Лилия",
+    "latin": "Lilium",
+    "supplierPrice": 480,
+    "packSize": 20,
+    "markup": 0.3,
+    "image": "https://images.unsplash.com/photo-1584824486509-112e4181ff6b?w=400",
+    "description": "Крупные лилии с изысканным ароматом."
+  },
+  {
+    "id": 7,
+    "name": "Хризантема Одноголовая",
+    "latin": "Chrysanthemum",
+    "supplierPrice": 140,
+    "packSize": 20,
+    "markup": 0.3,
+    "image": "/images/Chrysanthemum_od/Chrysanthemum_od.jpg",
+    "description": "Крупные одноголовые хризантемы."
+  }
+]
