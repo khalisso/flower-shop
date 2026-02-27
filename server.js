@@ -34,10 +34,16 @@ app.get('/api/flowers', (req, res) => {
 });
 
 app.post('/api/order', async (req, res) => {
-  const { flower, quantity, totalPrice, phone, tgUser } = req.body;
+  const { flowerId, quantity, totalPrice, phone, tgUser } = req.body;
 
-  if (!flower || !quantity || !totalPrice) {
+  if (!flowerId || !quantity || !totalPrice) {
     return res.status(400).json({ error: 'Не все данные заполнены' });
+  }
+
+  const flowers = readFlowers();
+  const flower = flowers.find(f => f.id === flowerId);
+  if (!flower) {
+    return res.status(404).json({ error: 'Цветок не найден' });
   }
 
   const now = new Date();
@@ -49,9 +55,9 @@ app.post('/api/order', async (req, res) => {
   let contactLine;
   if (tgUser) {
     const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ');
-    const username = tgUser.username ? `@${tgUser.username}` : '';
+    const username = tgUser.username ? ` @${tgUser.username}` : '';
     const profileLink = `tg://user?id=${tgUser.id}`;
-    contactLine = `👤 *Покупатель:* [${name}](${profileLink})${username ? ' ' + username : ''}`;
+    contactLine = `👤 *Покупатель:* [${name}](${profileLink})${username}`;
   } else {
     contactLine = `📞 *Телефон:* ${phone}`;
   }
@@ -72,7 +78,7 @@ ${contactLine}
     console.log(`✅ Заказ: ${flower.name} - ${quantity}шт`);
     res.json({ success: true });
   } catch (error) {
-    console.error('❌ Ошибка Telegram:', error);
+    console.error('❌ Ошибка Telegram:', error.message);
     res.status(500).json({ error: 'Не удалось отправить заказ' });
   }
 });

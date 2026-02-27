@@ -21,7 +21,7 @@ function TMAOrderPopup({ flower, quantity, totalPrice, onClose }) {
       await fetch(`${API_URL}/api/order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ flower, quantity, totalPrice, tgUser })
+        body: JSON.stringify({ flowerId: flower.id, quantity, totalPrice, tgUser })
       });
       setIsSubmitted(true);
     } catch (e) {
@@ -139,7 +139,7 @@ function WebOrderPopup({ flower, quantity, totalPrice, onClose }) {
       const response = await fetch(`${API_URL}/api/order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ flower, quantity, totalPrice, phone })
+        body: JSON.stringify({ flowerId: flower.id, quantity, totalPrice, phone })
       });
       const data = await response.json();
       if (data.success) setIsSubmitted(true);
