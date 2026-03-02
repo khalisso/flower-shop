@@ -21,12 +21,12 @@
   },
   {
     "id": 3,
-    "name": "Хризантема",
-    "latin": "Chrysanthemum",
-    "supplierPrice": 280,
-    "packSize": 20,
+    "name": "Хризантема Момоко",
+    "latin": "Chrysanthemum Momoko",
+    "supplierPrice": 170,
+    "packSize": 10,
     "markup": 0.3,
-    "image": "https://images.unsplash.com/photo-1516094893271-42192c6c976e?w=400",
+    "image": "/images/Chrysanthemum_momoko/Chrysanthemum_momoko.jpg",
     "description": "Яркие хризантемы, которые долго стоят в букете."
   },
   {
